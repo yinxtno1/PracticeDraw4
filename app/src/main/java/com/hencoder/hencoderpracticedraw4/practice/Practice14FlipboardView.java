@@ -22,6 +22,9 @@ public class Practice14FlipboardView extends View {
     int degree;
     ObjectAnimator animator = ObjectAnimator.ofInt(this, "degree", 0, 180);
 
+    private Bitmap bitmap1;
+    private Bitmap bitmap2;
+
     public Practice14FlipboardView(Context context) {
         super(context);
     }
@@ -36,6 +39,11 @@ public class Practice14FlipboardView extends View {
 
     {
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maps);
+
+        //创建上半部分的图像
+        bitmap1 = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight() / 2);
+        //创建下半部分图像
+        bitmap2 = Bitmap.createBitmap(bitmap, 0, bitmap.getHeight() / 2, bitmap.getWidth(), bitmap.getHeight() / 2);
 
         animator.setDuration(2500);
         animator.setInterpolator(new LinearInterpolator());
@@ -72,8 +80,10 @@ public class Practice14FlipboardView extends View {
         int x = centerX - bitmapWidth / 2;
         int y = centerY - bitmapHeight / 2;
 
-        canvas.save();
+        //canvas 绘制上半部分图像
+        canvas.drawBitmap(bitmap1, x, y, paint);
 
+        canvas.save();
         camera.save();
         camera.rotateX(degree);
         canvas.translate(centerX, centerY);
@@ -81,7 +91,8 @@ public class Practice14FlipboardView extends View {
         canvas.translate(-centerX, -centerY);
         camera.restore();
 
-        canvas.drawBitmap(bitmap, x, y, paint);
+        //canvas 绘制下半部分图像
+        canvas.drawBitmap(bitmap2, x, y + bitmapHeight / 2, paint);
         canvas.restore();
     }
 }
